@@ -1,0 +1,20 @@
+﻿<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <title>@Page.Title</title>
+
+    
+    @RenderPage("~/shared/_head.cshtml")
+</head>
+<body>
+    <main role="main">
+        @RenderSection("header", required: false)
+
+        <article class="content">
+            @RenderBody()
+        </article>
+    </main>
+
+    @RenderPage("~/shared/_footer.cshtml")
+</body>
+</html>
