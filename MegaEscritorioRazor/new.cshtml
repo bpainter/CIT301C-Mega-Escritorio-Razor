@@ -1,17 +1,129 @@
-﻿@section header {
+﻿@{
+
+<link href="~/assets/css/bootstrap-theme.css" rel="stylesheet" />
+<link href="~/assets/css/bootstrap.css" rel="stylesheet" />
+<link href="~/assets/css/main.css" rel="stylesheet" />
+
+    Validation.RequireField("Name", "Name is required.");
+    Validation.RequireField("Width", "Width is required.");
+    Validation.RequireField("Length", "Length is required.");
+    //Validation.RequireField("MaterialType", "Please choose a material type.");
+    //Validation.RequireField("NumOfDrawers", "Number of drawers is required.");
+    //Validation.RequireField("RushOrderDays", "Rush Order Days is required.");
+
+    var Name = Request.Form["Name"];
+    var Width = Request.Form["Width"];
+    var Length = Request.Form["Length"];
+    var MaterialType = Request.Form["MaterialType"];
+    var NumOfDrawers = Request.Form["NumOfDrawers"];
+    var RushOrderDays = Request.Form["RushOrderDays"];
+    var surfacePrice = 0;
+    var surfaceUpgrade = "";
+    var shippingPrice = "";
+    var shippingType = "";
+    var surfaceArea = 0;
+
+    if (IsPost && Validation.IsValid())
+    {
+        Console.Write("form has been submitted");
+        var db = Database.Open("Orders");
+        //use the length and width to determine the surfaceArea upgrade
+        surfaceArea = Int32.Parse(Width) * Int32.Parse(Length);
+        surfacePrice = surfaceArea > 1000 ? (surfaceArea - 1000) * 5 : 0;
+
+        //codeworks up to here
+        //get the upgrade for the material
+        surfaceUpgrade= db.QueryValue("SELECT Upgrade FROM Materials WHERE MaterialType=(@0)", MaterialType);
+        Console.Write(surfaceUpgrade);
+
+        //get the upgrade for the Rush Days Option
+        // if (surfaceArea < 1000)
+        //{
+        //  shippingType = "smallDesk";
+        //}
+        //else if (surfaceArea >= 1000 && surfaceArea < 1999)
+        // {
+        //    shippingType = "mediumDesk";
+        //}
+        //else if (surfaceArea >= 2000)
+        //{
+        //    shippingType = "largeDesk";
+        //}
+        //shippingPrice = db.QueryValue("SELECT shippingType FROM shippingPrices WHERE Days=(@0)", RushOrderDays);
+
+        // Define the insert query. The values to assign to the
+        // columns in the Product table are defined as parameters
+        // with the VALUES keyword.
+
+        if (ModelState.IsValid)
+        {
+            //        var insertQuery = "INSERT INTO Orders(Name, Width, Length, NumOfDrawers, RushOrderDays, Price, Date) " +
+            //            "VALUES (@0, @1, @2, @3, @4, @5, @6)";
+            //        db.Execute(insertQuery, Name, Width, Length, NumOfDrawers, RushOrderDays, Price, DateTime.Now);
+            // Display the page that lists products.
+
+            Response.Redirect("~/index");
+        }
+    }
+}
+@section header {
     <header>
         <h1>Add a New Desk</h1>
     </header>
 }
 
 <form id="new-entry" method="post">
-    <label>
-        Label:
-        <input type="text" name="" value="" />
-    </label>
-
+    @Html.ValidationSummary("Errors with your submission:")
+    <h4>Base Desk Price: $200</h4>
+    <div class="form-group">
+        <label>Name:</label>
+        <input class="form-control" name="Name" type="text" size="20" value="@Name" />
+    
+    </div>
+    <div class="form-group">
+        <label>Width:</label>
+        <input class="form-control" name="Width" type="text" size="20" value="@Width" />
+        
+    </div>
+    <div class="form-group">
+        <label>Length:</label>
+        <input class="form-control" name="Length" type="text" size="20" value="@Length" />
+        
+    </div>
+    <div class="form-group">
+        <label>Desk Material:</label>
+        <select class="form-control" name="@MaterialType">
+            <option value="pine">Pine - $50</option>
+            <option value="poplar">Poplar - $75</option>
+            <option value="laminate">Laminate - $100</option>
+            <option value="oak">Oak - $200</option>
+            <option value="alder">Alder - $250</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Number Of Drawers:</label>
+        <select class="form-control" name="@NumOfDrawers">
+            <option value="zero">0</option>
+            <option value="one">1 - $50</option>
+            <option value="two">2 - $100</option>
+            <option value="three">3 - $150</option>
+            <option value="four">4 - $200</option>v
+            <option value="five">5 - $250</option>
+            <option value="six">6 - $300</option>
+            <option value="seven">7 - $350</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Shipping Days:</label>
+        <select class="form-control"name="@RushOrderDays">
+            <option value="three">3 days</option>
+            <option value="five">5 days</option>
+            <option value="seven">7 days</option>
+            <option value="ground">14 days</option>
+        </select>
+    </div>
     <div class="button-group">
         <a href="~/index" class="btn btn-default">Cancel</a>
-        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 </form>

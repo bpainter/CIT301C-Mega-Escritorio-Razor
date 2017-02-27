@@ -22,13 +22,14 @@ header .btn {
 }
 
 form {
+    padding-top: 35px;
     margin: 0 auto;
     max-width: 600px;
 }
 
 form label {
-    display: block;
-    margin-bottom: 20px;
+ display: block;
+margin-bottom: 20px;
 }
 
 form input,

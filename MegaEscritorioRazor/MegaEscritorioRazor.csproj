@@ -117,10 +117,10 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="WebMatrix.Data">
-      <HintPath>\\vmware-host\Shared Folders\Downloads\WebMatrix.Data\WebMatrix.Data.dll</HintPath>
+      <HintPath>..\..\..\WebMatrix.Data.dll</HintPath>
     </Reference>
     <Reference Include="WebMatrix.WebData">
-      <HintPath>\\vmware-host\Shared Folders\Downloads\WebMatrix.Data\WebMatrix.WebData.dll</HintPath>
+      <HintPath>..\..\..\WebMatrix.WebData.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -160,6 +160,9 @@
     <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
     <Content Include="shared\_head.cshtml" />
     <Content Include="shared\_footer.cshtml" />
+    <Content Include="new.cshtml" />
+    <Content Include="delete.cshtml" />
+    <Content Include="edit.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
