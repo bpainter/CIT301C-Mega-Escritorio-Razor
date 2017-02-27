@@ -1,15 +1,12 @@
 ﻿@{
 
-<link href="~/assets/css/bootstrap-theme.css" rel="stylesheet" />
-<link href="~/assets/css/bootstrap.css" rel="stylesheet" />
-<link href="~/assets/css/main.css" rel="stylesheet" />
+    <link href="~/assets/css/bootstrap-theme.css" rel="stylesheet" />
+    <link href="~/assets/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/assets/css/main.css" rel="stylesheet" />
 
     Validation.RequireField("Name", "Name is required.");
     Validation.RequireField("Width", "Width is required.");
     Validation.RequireField("Length", "Length is required.");
-    //Validation.RequireField("MaterialType", "Please choose a material type.");
-    //Validation.RequireField("NumOfDrawers", "Number of drawers is required.");
-    //Validation.RequireField("RushOrderDays", "Rush Order Days is required.");
 
     var Name = Request.Form["Name"];
     var Width = Request.Form["Width"];
@@ -20,52 +17,58 @@
     var surfacePrice = 0;
     var surfaceUpgrade = "";
     var shippingPrice = "";
-    var shippingType = "";
     var surfaceArea = 0;
+    var Price = 100.0;  // temporary value
 
     if (IsPost && Validation.IsValid())
     {
         Console.Write("form has been submitted");
         var db = Database.Open("Orders");
         //use the length and width to determine the surfaceArea upgrade
-        surfaceArea = Int32.Parse(Width) * Int32.Parse(Length);
-        surfacePrice = surfaceArea > 1000 ? (surfaceArea - 1000) * 5 : 0;
-
-        //codeworks up to here
+        try
+        {
+            surfaceArea = Int32.Parse(Width) * Int32.Parse(Length);
+            surfacePrice = surfaceArea > 1000 ? (surfaceArea - 1000) * 5 : 0;
+        }
+        catch (IOException e)
+        {
+            Console.WriteLine("IOException source: {0}", e.Source);
+        }
         //get the upgrade for the material
-        surfaceUpgrade= db.QueryValue("SELECT Upgrade FROM Materials WHERE MaterialType=(@0)", MaterialType);
-        Console.Write(surfaceUpgrade);
+        surfaceUpgrade = db.QueryValue("SELECT Upgrade FROM Materials WHERE Material=(@0)", MaterialType);
 
         //get the upgrade for the Rush Days Option
-        // if (surfaceArea < 1000)
-        //{
-        //  shippingType = "smallDesk";
-        //}
-        //else if (surfaceArea >= 1000 && surfaceArea < 1999)
-        // {
-        //    shippingType = "mediumDesk";
-        //}
-        //else if (surfaceArea >= 2000)
-        //{
-        //    shippingType = "largeDesk";
-        //}
-        //shippingPrice = db.QueryValue("SELECT shippingType FROM shippingPrices WHERE Days=(@0)", RushOrderDays);
+        if (surfaceArea < 1000)
+        {
+            shippingPrice = db.QueryValue("SELECT smallDesk FROM shippingPrices WHERE Days=(@0)", RushOrderDays);
+        }
+        else if (surfaceArea >= 1000 && surfaceArea < 1999)
+        {
+            shippingPrice = db.QueryValue("SELECT medDesk FROM shippingPrices WHERE Days=(@0)", RushOrderDays);
+        }
+        else if (surfaceArea >= 2000)
+        {
+            shippingPrice = db.QueryValue("SELECT largeDesk FROM shippingPrices WHERE Days=(@0)", RushOrderDays);
+        }
 
         // Define the insert query. The values to assign to the
         // columns in the Product table are defined as parameters
         // with the VALUES keyword.
 
+
         if (ModelState.IsValid)
         {
-            //        var insertQuery = "INSERT INTO Orders(Name, Width, Length, NumOfDrawers, RushOrderDays, Price, Date) " +
-            //            "VALUES (@0, @1, @2, @3, @4, @5, @6)";
-            //        db.Execute(insertQuery, Name, Width, Length, NumOfDrawers, RushOrderDays, Price, DateTime.Now);
-            // Display the page that lists products.
+            var insertQuery = "INSERT INTO Orders2(Name, Width, Length, NumDrawers, MaterialType, RushDays, Price, Date) " +
+                 "VALUES (@0, @1, @2, @3, @4, @5, @6, @7)";
+            db.Execute(insertQuery, Name, Width, Length, NumOfDrawers, MaterialType, RushOrderDays, Price, DateTime.Now);
 
+            // Display the page that lists products.
             Response.Redirect("~/index");
         }
     }
+    }
 }
+
 @section header {
     <header>
         <h1>Add a New Desk</h1>
@@ -73,26 +76,26 @@
 }
 
 <form id="new-entry" method="post">
-    @Html.ValidationSummary("Errors with your submission:")
+    @Html.ValidationSummary()
     <h4>Base Desk Price: $200</h4>
     <div class="form-group">
         <label>Name:</label>
         <input class="form-control" name="Name" type="text" size="20" value="@Name" />
-    
+
     </div>
     <div class="form-group">
         <label>Width:</label>
         <input class="form-control" name="Width" type="text" size="20" value="@Width" />
-        
+
     </div>
     <div class="form-group">
         <label>Length:</label>
         <input class="form-control" name="Length" type="text" size="20" value="@Length" />
-        
+
     </div>
     <div class="form-group">
         <label>Desk Material:</label>
-        <select class="form-control" name="@MaterialType">
+        <select class="form-control"  name="@MaterialType">
             <option value="pine">Pine - $50</option>
             <option value="poplar">Poplar - $75</option>
             <option value="laminate">Laminate - $100</option>
@@ -115,7 +118,7 @@
     </div>
     <div class="form-group">
         <label>Shipping Days:</label>
-        <select class="form-control"name="@RushOrderDays">
+        <select class="form-control" name="@RushOrderDays">
             <option value="three">3 days</option>
             <option value="five">5 days</option>
             <option value="seven">7 days</option>
