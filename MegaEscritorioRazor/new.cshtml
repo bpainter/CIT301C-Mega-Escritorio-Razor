@@ -11,14 +11,14 @@
     var Name = Request.Form["Name"];
     var Width = Request.Form["Width"];
     var Length = Request.Form["Length"];
-    var MaterialType = Request.Form["MaterialType"];
-    var NumOfDrawers = Request.Form["NumOfDrawers"];
-    var RushOrderDays = Request.Form["RushOrderDays"];
+    var MaterialType = Request.Form["getMaterial"];
+    var NumOfDrawers = Request.Form["getDrawers"];
+    var RushOrderDays = Request.Form["getDays"];
     var surfacePrice = 0;
-    var surfaceUpgrade = "";
-    var shippingPrice = "";
+    var surfaceUpgrade = 0;
+    var shippingPrice = 0;
     var surfaceArea = 0;
-    var Price = 100.0;  // temporary value
+    var price = 100;  // temporary value--int, right?
 
     if (IsPost && Validation.IsValid())
     {
@@ -40,15 +40,15 @@
         //get the upgrade for the Rush Days Option
         if (surfaceArea < 1000)
         {
-            shippingPrice = db.QueryValue("SELECT smallDesk FROM shippingPrices WHERE Days=(@0)", RushOrderDays);
+            shippingPrice = db.QueryValue("SELECT smallDesk FROM shippingPrices WHERE NewDays=(@0)", RushOrderDays);
         }
         else if (surfaceArea >= 1000 && surfaceArea < 1999)
         {
-            shippingPrice = db.QueryValue("SELECT medDesk FROM shippingPrices WHERE Days=(@0)", RushOrderDays);
+            shippingPrice = db.QueryValue("SELECT medDesk FROM shippingPrices WHERE NewDays=(@0)", RushOrderDays);
         }
         else if (surfaceArea >= 2000)
         {
-            shippingPrice = db.QueryValue("SELECT largeDesk FROM shippingPrices WHERE Days=(@0)", RushOrderDays);
+            shippingPrice = db.QueryValue("SELECT largeDesk FROM shippingPrices WHERE NewDays=(@0)", RushOrderDays);
         }
 
         // Define the insert query. The values to assign to the
@@ -60,7 +60,7 @@
         {
             var insertQuery = "INSERT INTO Orders2(Name, Width, Length, NumDrawers, MaterialType, RushDays, Price, Date) " +
                  "VALUES (@0, @1, @2, @3, @4, @5, @6, @7)";
-            db.Execute(insertQuery, Name, Width, Length, NumOfDrawers, MaterialType, RushOrderDays, Price, DateTime.Now);
+            db.Execute(insertQuery, Name, Width, Length, NumOfDrawers, MaterialType, RushOrderDays, price, DateTime.Now);
 
             // Display the page that lists products.
             Response.Redirect("~/index");
@@ -95,7 +95,7 @@
     </div>
     <div class="form-group">
         <label>Desk Material:</label>
-        <select class="form-control"  name="@MaterialType">
+        <select class="form-control"  name="getMaterial">
             <option value="pine">Pine - $50</option>
             <option value="poplar">Poplar - $75</option>
             <option value="laminate">Laminate - $100</option>
@@ -105,7 +105,7 @@
     </div>
     <div class="form-group">
         <label>Number Of Drawers:</label>
-        <select class="form-control" name="@NumOfDrawers">
+        <select class="form-control" name="getDrawers">
             <option value="zero">0</option>
             <option value="one">1 - $50</option>
             <option value="two">2 - $100</option>
@@ -118,7 +118,7 @@
     </div>
     <div class="form-group">
         <label>Shipping Days:</label>
-        <select class="form-control" name="@RushOrderDays">
+        <select class="form-control" name="getDays">
             <option value="three">3 days</option>
             <option value="five">5 days</option>
             <option value="seven">7 days</option>
