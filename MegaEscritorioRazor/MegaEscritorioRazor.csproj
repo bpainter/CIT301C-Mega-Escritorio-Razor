@@ -117,13 +117,14 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="WebMatrix.Data">
-      <HintPath>..\..\..\WebMatrix.Data.dll</HintPath>
+      <HintPath>H:\OneDrive\BYU-Idaho\ASP.NET 301C\WebMatrix.Data\WebMatrix.Data.dll</HintPath>
     </Reference>
     <Reference Include="WebMatrix.WebData">
-      <HintPath>..\..\..\WebMatrix.WebData.dll</HintPath>
+      <HintPath>H:\OneDrive\BYU-Idaho\ASP.NET 301C\WebMatrix.Data\WebMatrix.WebData.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\Orders.sdf" />
     <Content Include="assets\css\bootstrap-theme.css" />
     <Content Include="assets\css\bootstrap.css" />
     <Content Include="assets\css\main.css" />
