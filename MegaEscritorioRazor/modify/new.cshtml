@@ -21,46 +21,45 @@
     var price = 100;  // temporary value--int, right
 
     if (IsPost && Validation.IsValid())
+    { 
+    var db = Database.Open("Orders");
+    //use the length and width to determine the surfaceArea upgrade
+    try
     {
-        Console.Write("form has been submitted");
-        var db = Database.Open("Orders");
-        //use the length and width to determine the surfaceArea upgrade
-        try
-        {
-            surfaceArea = Int32.Parse(Width) * Int32.Parse(Length);
-            surfacePrice = surfaceArea > 1000 ? (surfaceArea - 1000) * 5 : 0;
-        }
-        catch (IOException e)
-        {
-            Console.WriteLine("IOException source: {0}", e.Source);
-        }
-        //get the upgrade for the material
-        surfaceUpgrade = db.QueryValue("SELECT Upgrade FROM Materials WHERE Material=(@0)", MaterialType);
+        surfaceArea = Int32.Parse(Width) * Int32.Parse(Length);
+        surfacePrice = surfaceArea > 1000 ? (surfaceArea - 1000) * 5 : 0;
+    }
+    catch (IOException e)
+    {
+        Console.WriteLine("IOException source: {0}", e.Source);
+    }
+    //get the upgrade for the material
+    surfaceUpgrade = db.QueryValue("SELECT Upgrade FROM Materials WHERE Material=(@0)", MaterialType);
 
-        //get the upgrade for the Rush Days Option
-        if (surfaceArea < 1000)
-        {
-            shippingPrice = db.QueryValue("SELECT smallDesk FROM shippingPrices WHERE NewDays=(@0)", RushOrderDays);
-        }
-        else if (surfaceArea >= 1000 && surfaceArea < 1999)
-        {
-            shippingPrice = db.QueryValue("SELECT medDesk FROM shippingPrices WHERE NewDays=(@0)", RushOrderDays);
-        }
-        else if (surfaceArea >= 2000)
-        {
-            shippingPrice = db.QueryValue("SELECT largeDesk FROM shippingPrices WHERE NewDays=(@0)", RushOrderDays);
-        }
+    //get the upgrade for the Rush Days Option
+    if (surfaceArea < 1000)
+    {
+        shippingPrice = db.QueryValue("SELECT smallDesk FROM shippingPrices WHERE NewDays=(@0)", RushOrderDays);
+    }
+    else if (surfaceArea >= 1000 && surfaceArea < 1999)
+    {
+        shippingPrice = db.QueryValue("SELECT medDesk FROM shippingPrices WHERE NewDays=(@0)", RushOrderDays);
+    }
+    else if (surfaceArea >= 2000)
+    {
+        shippingPrice = db.QueryValue("SELECT largeDesk FROM shippingPrices WHERE NewDays=(@0)", RushOrderDays);
+    }
 
-        // Define the insert query. The values to assign to the
-        // columns in the Product table are defined as parameters
-        // with the VALUES keyword.
+    // Define the insert query. The values to assign to the
+    // columns in the Product table are defined as parameters
+    // with the VALUES keyword.
 
 
-        if (ModelState.IsValid)
-        {
-            var insertQuery = "INSERT INTO Orders2(Name, Width, Length, NumDrawers, MaterialType, RushDays, Price, Date) " +
-                 "VALUES (@0, @1, @2, @3, @4, @5, @6, @7)";
-            db.Execute(insertQuery, Name, Width, Length, NumOfDrawers, MaterialType, RushOrderDays, price, DateTime.Now);
+    if (ModelState.IsValid)
+    {
+        var insertQuery = "INSERT INTO Orders2(Name, Width, Length, NumDrawers, MaterialType, RushDays, Price, Date) " +
+             "VALUES (@0, @1, @2, @3, @4, @5, @6, @7)";
+        db.Execute(insertQuery, Name, Width, Length, NumOfDrawers, MaterialType, RushOrderDays, price, DateTime.Now);
 
             // Display the page that lists products.
             Response.Redirect("~/index");
@@ -158,7 +157,7 @@
         </select>
     </div>
     <div class="button-group">
-        <a href="~/index" class="btn btn-default">Cancel</a>
+        <a href="~/index/display-orders" class="btn btn-default">Cancel</a>
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 </form>

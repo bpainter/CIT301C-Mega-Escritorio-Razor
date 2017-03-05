@@ -161,9 +161,9 @@
     <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
     <Content Include="shared\_head.cshtml" />
     <Content Include="shared\_footer.cshtml" />
-    <Content Include="new.cshtml" />
-    <Content Include="delete.cshtml" />
-    <Content Include="edit.cshtml" />
+    <Content Include="modify\new.cshtml" />
+    <Content Include="modify\delete.cshtml" />
+    <Content Include="modify\edit.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
