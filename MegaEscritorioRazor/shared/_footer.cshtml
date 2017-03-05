@@ -11,11 +11,11 @@
     });
 
     $(".img-container").click(function () {
+        $(".material").find('option:selected').removeAttr("selected");
         var newValue = "";
         $(".img-container ").removeClass("selected-border");
         $(this).addClass("selected-border");
         newValue = $(this).find('img:first').attr("class")
-        $("select option").prop("selected", false);
         $(".material").find('option[value="' + newValue + '"]').attr("selected", true);
     });
 </script>
