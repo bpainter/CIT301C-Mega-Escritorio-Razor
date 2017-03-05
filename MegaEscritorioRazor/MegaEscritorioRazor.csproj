@@ -130,6 +130,11 @@
     <Content Include="assets\css\main.css" />
     <Content Include="assets\css\normalize.css" />
     <Content Include="assets\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="assets\images\alder.jpg" />
+    <Content Include="assets\images\laminate.jpg" />
+    <Content Include="assets\images\oak.jpeg" />
+    <Content Include="assets\images\pine.jpg" />
+    <Content Include="assets\images\poplar.jpg" />
     <Content Include="assets\js\vendor\boostrap.min.js" />
     <Content Include="assets\js\vendor\jquery.min.js" />
     <Content Include="assets\js\vendor\main.js" />
@@ -153,6 +158,7 @@
     <Content Include="packages.config" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="assets\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="assets\fonts\glyphicons-halflings-regular.ttf" />
@@ -183,7 +189,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="assets\images\" />
     <Folder Include="obj\Debug\TempPE\" />
   </ItemGroup>
   <PropertyGroup>

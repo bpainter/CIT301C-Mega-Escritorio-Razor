@@ -1,7 +1,4 @@
 ﻿@{
-    <link href="~/assets/css/bootstrap-theme.css" rel="stylesheet" />
-    <link href="~/assets/css/bootstrap.css" rel="stylesheet" />
-    <link href="~/assets/css/main.css" rel="stylesheet" />
 
     var name = "";
     var width = "";
@@ -80,7 +77,7 @@
         <h1>Edit</h1>
     </header>
 }
-
+@RenderPage("~/shared/_head.cshtml")
 <form id="edit-entry" method="post">
     @Html.ValidationSummary()
     <h4>Base Desk Price: $200</h4>
@@ -112,6 +109,23 @@
             <option value="alder" @(materialType == "alder" ? "selected" : "")>Alder - $250</option>
         </select>
     </div>
+    <div class="material-types row">
+        <div class="img-container">
+            <img class="pine" src="~/assets/images/pine.jpg" height="100" width="100" />
+        </div>
+        <div class="img-container">
+            <img class="poplar" src="~/assets/images/poplar.jpg" height="100" width="100" />
+        </div>
+        <div class="img-container">
+            <img class="laminate" src="~/assets/images/laminate.jpg" height="100" width="100" />
+        </div>
+        <div class="img-container">
+            <img class="oak" src="~/assets/images/oak.jpeg" height="100" width="100" />
+        </div>
+        <div class="img-container">
+            <img class="alder" src="~/assets/images/alder.jpg" height="100" width="100" />
+        </div>
+    </div>
     <div class="form-group">
         <label>Number Of Drawers:</label>
         <select class="form-control" name="getDrawers">
@@ -139,3 +153,4 @@
         <button type="submit" class="btn btn-primary">Submit Changes</button>
     </div>
 </form>
+@RenderPage("~/shared/_footer.cshtml")

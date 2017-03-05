@@ -1,8 +1,5 @@
 ﻿@{
-
-    <link href="~/assets/css/bootstrap-theme.css" rel="stylesheet" />
-    <link href="~/assets/css/bootstrap.css" rel="stylesheet" />
-    <link href="~/assets/css/main.css" rel="stylesheet" />
+    @RenderPage("~/shared/_head.cshtml")
 
     Validation.RequireField("Name", "Name is required.");
     Validation.RequireField("Width", "Width is required.");
@@ -21,67 +18,51 @@
     var price = 100;  // temporary value--int, right
 
     if (IsPost && Validation.IsValid())
-    { 
-    var db = Database.Open("Orders");
-    //use the length and width to determine the surfaceArea upgrade
-    try
     {
-        surfaceArea = Int32.Parse(Width) * Int32.Parse(Length);
-        surfacePrice = surfaceArea > 1000 ? (surfaceArea - 1000) * 5 : 0;
-    }
-    catch (IOException e)
-    {
-        Console.WriteLine("IOException source: {0}", e.Source);
-    }
-    //get the upgrade for the material
-    surfaceUpgrade = db.QueryValue("SELECT Upgrade FROM Materials WHERE Material=(@0)", MaterialType);
+        var db = Database.Open("Orders");
+        //use the length and width to determine the surfaceArea upgrade
+        try
+        {
+            surfaceArea = Int32.Parse(Width) * Int32.Parse(Length);
+            surfacePrice = surfaceArea > 1000 ? (surfaceArea - 1000) * 5 : 0;
+        }
+        catch (IOException e)
+        {
+            Console.WriteLine("IOException source: {0}", e.Source);
+        }
+        //get the upgrade for the material
+        surfaceUpgrade = db.QueryValue("SELECT Upgrade FROM Materials WHERE Material=(@0)", MaterialType);
 
-    //get the upgrade for the Rush Days Option
-    if (surfaceArea < 1000)
-    {
-        shippingPrice = db.QueryValue("SELECT smallDesk FROM shippingPrices WHERE NewDays=(@0)", RushOrderDays);
-    }
-    else if (surfaceArea >= 1000 && surfaceArea < 1999)
-    {
-        shippingPrice = db.QueryValue("SELECT medDesk FROM shippingPrices WHERE NewDays=(@0)", RushOrderDays);
-    }
-    else if (surfaceArea >= 2000)
-    {
-        shippingPrice = db.QueryValue("SELECT largeDesk FROM shippingPrices WHERE NewDays=(@0)", RushOrderDays);
-    }
+        //get the upgrade for the Rush Days Option
+        if (surfaceArea < 1000)
+        {
+            shippingPrice = db.QueryValue("SELECT smallDesk FROM shippingPrices WHERE NewDays=(@0)", RushOrderDays);
+        }
+        else if (surfaceArea >= 1000 && surfaceArea < 1999)
+        {
+            shippingPrice = db.QueryValue("SELECT medDesk FROM shippingPrices WHERE NewDays=(@0)", RushOrderDays);
+        }
+        else if (surfaceArea >= 2000)
+        {
+            shippingPrice = db.QueryValue("SELECT largeDesk FROM shippingPrices WHERE NewDays=(@0)", RushOrderDays);
+        }
 
-    // Define the insert query. The values to assign to the
-    // columns in the Product table are defined as parameters
-    // with the VALUES keyword.
+        // Define the insert query. The values to assign to the
+        // columns in the Product table are defined as parameters
+        // with the VALUES keyword.
 
 
-    if (ModelState.IsValid)
-    {
-        var insertQuery = "INSERT INTO Orders2(Name, Width, Length, NumDrawers, MaterialType, RushDays, Price, Date) " +
-             "VALUES (@0, @1, @2, @3, @4, @5, @6, @7)";
-        db.Execute(insertQuery, Name, Width, Length, NumOfDrawers, MaterialType, RushOrderDays, price, DateTime.Now);
+        if (ModelState.IsValid)
+        {
+            var insertQuery = "INSERT INTO Orders2(Name, Width, Length, NumDrawers, MaterialType, RushDays, Price, Date) " +
+                 "VALUES (@0, @1, @2, @3, @4, @5, @6, @7)";
+            db.Execute(insertQuery, Name, Width, Length, NumOfDrawers, MaterialType, RushOrderDays, price, DateTime.Now);
 
             // Display the page that lists products.
             Response.Redirect("~/index");
         }
     }
-    }
-<script src="~/assets/js/vendor/jquery.min.js"></script>
-<script>
-    $(".material").change(function () {
-        var material = "";
-        $(".img-container ").removeClass("selected-border");
-        material = $(".material option:selected").val();
-        $("." + material).parent().addClass("selected-border");
-    });
-
-    $(".img-container").click(function () {
-        $(".img-container ").removeClass("selected-border");
-        $(this).addClass("selected-border");
-        var newValue = $(this).find('img:first').attr("class")
-        $(".material").find('option[value="' + newValue + '"]').attr("selected", true);
-    });
-</script>
+}
 
 @section header {
     <header>
@@ -109,7 +90,7 @@
     </div>
     <div class="form-group">
         <label>Desk Material:</label>
-        <select class="form-control material"  name="getMaterial">
+        <select class="form-control material" name="getMaterial">
             <option value="pine">Pine - $50</option>
             <option value="poplar">Poplar - $75</option>
             <option value="laminate">Laminate - $100</option>
@@ -117,23 +98,23 @@
             <option value="alder">Alder - $250</option>
         </select>
     </div>
-        <div class="material-types row">
-            <div class="img-container">
-                <img class="pine" src="~/assets/images/pine.jpg" height="100" width="100" />
-            </div>
-            <div class="img-container">
-                <img class="poplar" src="~/assets/images/poplar.jpg" height="100" width="100" />
-            </div>
-            <div class="img-container">
-                <img class="laminate" src="~/assets/images/laminate.jpg" height="100" width="100" />
-           </div>
-           <div class="img-container">
-              <img class="oak" src="~/assets/images/oak.jpeg" height="100" width="100" />
-           </div>
-           <div class="img-container">
-              <img class="alder" src="~/assets/images/alder.jpg" height="100" width="100" />
-           </div>
+    <div class="material-types row">
+        <div class="img-container">
+            <img class="pine" src="~/assets/images/pine.jpg" height="100" width="100" />
         </div>
+        <div class="img-container">
+            <img class="poplar" src="~/assets/images/poplar.jpg" height="100" width="100" />
+        </div>
+        <div class="img-container">
+            <img class="laminate" src="~/assets/images/laminate.jpg" height="100" width="100" />
+        </div>
+        <div class="img-container">
+            <img class="oak" src="~/assets/images/oak.jpeg" height="100" width="100" />
+        </div>
+        <div class="img-container">
+            <img class="alder" src="~/assets/images/alder.jpg" height="100" width="100" />
+        </div>
+    </div>
     <div class="form-group">
         <label>Number Of Drawers:</label>
         <select class="form-control" name="getDrawers">
@@ -161,3 +142,4 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 </form>
+@RenderPage("~/shared/_footer.cshtml")

@@ -2,3 +2,20 @@
 <script>window.jQuery || document.write('<script src="~/assets/js/vendor/jquery.min.js"><\/script>')</script>
 <script src="~/assets/js/vendor/bootstrap.min.js"></script>
 <script src="~/assets/js/main.js"></script>
+<script>
+    $(".material").change(function () {
+        var material = "";
+        $(".img-container ").removeClass("selected-border");
+        material = $(".material option:selected").val();
+        $("." + material).parent().addClass("selected-border");
+    });
+
+    $(".img-container").click(function () {
+        var newValue = "";
+        $(".img-container ").removeClass("selected-border");
+        $(this).addClass("selected-border");
+        newValue = $(this).find('img:first').attr("class")
+        $("select option").prop("selected", false);
+        $(".material").find('option[value="' + newValue + '"]').attr("selected", true);
+    });
+</script>
