@@ -69,31 +69,18 @@
     }
 <script src="~/assets/js/vendor/jquery.min.js"></script>
 <script>
-    //$(".material").change(function () {
-    //    $(this).addClass("selected-border");
-        //if ($(this).val() == "pine"){
-        //     $(".pine-img").addClass("selected-border");
-        // } else if ($(this).val() == "poplar"){
-        //     $(".poplar-img").addClass("selected-border");
-        // } else if ($(this).val() == "laminate") {
-        //     $(".laminate-img").addClass("selected-border");
-        // } else if ($(this).val() == "oak") {
-        //     $(".oak-img").addClass("selected-border");
-        //} else if ($(this).val() == "alder") {
-        //    $(".alder-img").addClass("selected-border");
-        //}
-    //});
-
     $(".material").change(function () {
-            var material = ""; 
-        $(".pine-img, .laminate-img, .oak-img, .alder-img ").removeClass("selected-border");
-               material = $(this).text() + "-img";
-        $(material).addClass("selected-border");
+        var material = "";
+        $(".img-container ").removeClass("selected-border");
+        material = $(".material option:selected").val();
+        $("." + material).parent().addClass("selected-border");
     });
 
-    $(".pine-img").click(function () {
-        Response.Write("alert(hello)");
-        $(".pine-img").addClass("selected-border");
+    $(".img-container").click(function () {
+        $(".img-container ").removeClass("selected-border");
+        $(this).addClass("selected-border");
+        var newValue = $(this).find('img:first').attr("class")
+        $(".material").find('option[value="' + newValue + '"]').attr("selected", true);
     });
 </script>
 
@@ -132,20 +119,20 @@
         </select>
     </div>
         <div class="material-types row">
-            <div class="col-xs-2 col-md-2">
-                <img class="pine-img" src="~/assets/images/pine.jpg" height="100" width="100" />
+            <div class="img-container">
+                <img class="pine" src="~/assets/images/pine.jpg" height="100" width="100" />
             </div>
-            <div class="col-xs-2 col-md-2">
-                <img class="poplar-img" src="~/assets/images/poplar.jpg" height="100" width="100" />
+            <div class="img-container">
+                <img class="poplar" src="~/assets/images/poplar.jpg" height="100" width="100" />
             </div>
-            <div class="col-xs-2 col-md-2">
-                <img class="laminate-img" src="~/assets/images/laminate.jpg" height="100" width="100" />
+            <div class="img-container">
+                <img class="laminate" src="~/assets/images/laminate.jpg" height="100" width="100" />
            </div>
-           <div class="col-xs-2 col-md-2">
-              <img class="oak-img" src="~/assets/images/oak.jpeg" height="100" width="100" />
+           <div class="img-container">
+              <img class="oak" src="~/assets/images/oak.jpeg" height="100" width="100" />
            </div>
-           <div class="col-xs-2 col-md-2">
-              <img class="alder-img" src="~/assets/images/alder.jpg" height="100" width="100" />
+           <div class="img-container">
+              <img class="alder" src="~/assets/images/alder.jpg" height="100" width="100" />
            </div>
         </div>
     <div class="form-group">
