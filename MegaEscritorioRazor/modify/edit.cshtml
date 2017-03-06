@@ -1,5 +1,4 @@
 ﻿@{
-
     var name = "";
     var width = "";
     var length = "";
@@ -25,7 +24,6 @@
         Validation.RequireField("name", "Name is required.");
         Validation.RequireField("width", "Width is required.");
         Validation.RequireField("length", "Length is required.");
-        Validation.RequireField("id", "Where's the order ID?");
 
         name = Request.Form["name"];
         width = Request.Form["width"];
@@ -33,11 +31,10 @@
         materialType = Request.Form["getMaterial"];
         numOfDrawers = Request.Form["getDrawers"];
         rushOrderDays = Request.Form["getDays"];
-        id = Request.Form["id"];
 
         var queryString = "UPDATE Orders2 SET Name=@0, Width=@2, Length=@3, NumDrawers=@4, MaterialType=@5, RushDays=@6, Price=@7 WHERE Id=@8";
         db.Execute(queryString, name, width, length, numOfDrawers, materialType, rushOrderDays, price, id);
-        Response.Redirect("~/index/view-orders");
+        Response.Redirect("~/index");
     } else
     {
         var queryString = "SELECT * FROM Orders2 WHERE Id=@0";

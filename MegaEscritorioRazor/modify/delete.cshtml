@@ -1,55 +1,46 @@
 ﻿@{
-    <link href="~/assets/css/bootstrap-theme.css" rel="stylesheet" />
-    <link href="~/assets/css/bootstrap.css" rel="stylesheet" />
-    <link href="~/assets/css/main.css" rel="stylesheet" />
+    Layout = "~/shared/_layout.cshtml";
+}
 
-        var name = "";
-        var width = "";
-        var length = "";
-        var materialType = "";
-        var numOfDrawers = "";
-        var rushOrderDays = "";
-        var price = "";
-        var id = "";
+@{
+    var name = "";
+    var width = "";
+    var length = "";
+    var materialType = "";
+    var numOfDrawers = "";
+    var rushOrderDays = "";
+    var surfacePrice = "";
+    var surfaceUpgrade = "";
+    var shippingPrice = "";
+    var surfaceArea = "";
+    var price = "";
+    var id = UrlData[0];
 
-        if (!IsPost)
-        {
-            if (!Request.QueryString["ID"].IsEmpty() && Request.QueryString["ID"].IsInt())
-            {
-                id = Request.QueryString["ID"];
-                var db = Database.Open("Orders");
-                var dbCommand = "SELECT * FROM Orders2 WHERE ID = @0";
-                var row = db.QuerySingle(dbCommand, id);
-                if (row != null)
-                {
-                    name = row.Name;
-                    width = row.Width;
-                    length = row.Length;
-                    materialType = row.MaterialType;
-                    numOfDrawers = row.NumDrawers;
-                    rushOrderDays = row.RushDays;
-                    price = row.Price;
-                }
-                else
-                {
-                    Validation.AddFormError("No order was found for that ID.");
-                }
-            }
-            else
-            {
-                Validation.AddFormError("No order was selected.");
-            }
-        }
-
-        if (IsPost && !Request["buttonDelete"].IsEmpty())
-        {
-            id = Request.Form["id"];
-            var db = Database.Open("Orders");
-            var deleteCommand = "DELETE FROM Orders2 WHERE ID = @0";
-            db.Execute(deleteCommand, id);
-            Response.Redirect("~/index/view-orders");
-        }
+    if (id.IsEmpty())
+    {
+        Response.Redirect("~/index");
     }
+
+    var db = Database.Open("Orders");
+    var row = db.QuerySingle("SELECT * FROM Orders2 WHERE Id=@0", id);
+
+    name = row.Name;
+    width = row.Width;
+    length = row.Length;
+    materialType = row.MaterialType;
+    numOfDrawers = row.NumDrawers;
+    rushOrderDays = row.RushDays;
+    price = row.Price;
+
+    if (IsPost && !id.IsEmpty())
+    {
+        var queryString = "DELETE FROM Orders2 WHERE Id=@0";
+
+        db.Execute(queryString, id);
+        Response.Redirect(Href("~/index"));
+    }
+}
+
 
 @section header {
     <header>
