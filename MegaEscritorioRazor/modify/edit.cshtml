@@ -11,38 +11,16 @@
     var shippingPrice = "";
     var surfaceArea = "";
     var price = "";
-    var id = "";
+    var id = UrlData[0];
 
-    if (!IsPost)
+    if (id.IsEmpty())
     {
-        if (!Request.QueryString["ID"].IsEmpty() && Request.QueryString["ID"].IsInt())
-        {
-            id = Request.QueryString["ID"];
-            var db = Database.Open("Orders");
-            var dbCommand = "SELECT * FROM Orders2 WHERE ID = @0";
-            var row = db.QuerySingle(dbCommand, id);
-            if (row != null)
-            {
-                name = row.Name;
-                width = row.Width;
-                length = row.Length;
-                materialType = row.MaterialType;
-                numOfDrawers = row.NumDrawers;
-                rushOrderDays = row.RushDays;
-                price = row.Price;
-            }
-            else
-            {
-                Validation.AddFormError("No order was found for that ID.");
-            }
-        }
-        else
-        {
-            Validation.AddFormError("No order was selected.");
-        }
+        Response.Redirect("~/index");
     }
 
-    if (IsPost)
+    var db = Database.Open("Orders");
+
+    if (IsPost && Validation.IsValid())
     {
         Validation.RequireField("name", "Name is required.");
         Validation.RequireField("width", "Width is required.");
@@ -57,16 +35,21 @@
         rushOrderDays = Request.Form["getDays"];
         id = Request.Form["id"];
 
-        if (Validation.IsValid())
-        {
+        var queryString = "UPDATE Orders2 SET Name=@0, Width=@2, Length=@3, NumDrawers=@4, MaterialType=@5, RushDays=@6, Price=@7 WHERE Id=@8";
+        db.Execute(queryString, name, width, length, numOfDrawers, materialType, rushOrderDays, price, id);
+        Response.Redirect("~/index/view-orders");
+    } else
+    {
+        var queryString = "SELECT * FROM Orders2 WHERE Id=@0";
+        var row = db.QuerySingle(queryString, id);
 
-            //We'll need to do some recalculating here for the final price
-
-            var db = Database.Open("Orders");
-            var updateCommand = "UPDATE Orders2 SET Name=@0, Width=@2, Length=@3, NumDrawers=@4, MaterialType=@5, RushDays=@6, Price=@7 WHERE Id=@8";
-            db.Execute(updateCommand, name, width, length, numOfDrawers, materialType, rushOrderDays, price, id);
-            Response.Redirect("~/index/view-orders");
-        }
+        name = row.Name;
+        width = row.Width;
+        length = row.Length;
+        materialType = row.MaterialType;
+        numOfDrawers = row.NumDrawers;
+        rushOrderDays = row.RushDays;
+        price = row.Price;
     }
 }
 
@@ -74,7 +57,7 @@
 
 @section header {
     <header>
-        <h1>Edit</h1>
+        <h1>Edit Order for @name</h1>
     </header>
 }
 @RenderPage("~/shared/_head.cshtml")
