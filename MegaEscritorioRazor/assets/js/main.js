@@ -4,7 +4,7 @@ $(document).ready(function () {
         var materialDropdownValue = $(".material").val();
 
         // Set the correct square of the material image when the page loads 
-        $('.img-container').find("." + materialDropdownValue).addClass("selected-border");
+        $('.img-container').find("." + materialDropdownValue).parent().addClass("selected-border");
 
 
         // Change the image container when selecting a material from the dropdown
@@ -18,10 +18,9 @@ $(document).ready(function () {
         // Change the material dropdown based on the material square
         $(".img-container").click(function () {
             $(".material").find('option:selected').removeAttr("selected");
-            var newValue = "";
             $(".img-container ").removeClass("selected-border");
             $(this).addClass("selected-border");
-            newValue = $(this).find('img:first').attr("class")
+            var newValue = $(this).find('img').attr("class");
             $(".material").find('option[value="' + newValue + '"]').attr("selected", true);
         });
     }

@@ -29,9 +29,12 @@ form {
 
 form label {
     display: block;
-    margin-bottom: 20px;
+    margin-bottom: 0;
 }
 
+form input[type="search"] {
+    margin-bottom: 20px;
+}
 form input,
 form textarea {
     display: block;
@@ -50,13 +53,23 @@ p > span {
     float: right;
 }
 .material-types {
-    padding: 20px 0;
-}
-.selected-border {
-    border: 5px solid blue;
+    margin-left: 0;
+    padding: 0 0 20px;
 }
 .img-container {
+    border: 3px solid transparent;
+    cursor: pointer;
     display: inline-block;
-    padding: 8px;
+    padding: 5px;
+    opacity: .3;
+    transition: all 250ms ease;
+}
+.img-container:hover,
+.img-container:focus {
+    opacity: 1;
+}
+.selected-border {
+    border: 3px solid #2B679B;
+    opacity: 1;
 }
 
