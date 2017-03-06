@@ -6,6 +6,10 @@
     Validation.RequireField("name", "Name is required.");
     Validation.RequireField("width", "Width is required.");
     Validation.RequireField("length", "Length is required.");
+    Validation.Add("width", Validator.Integer("Width must be an integer"));
+    Validation.Add("width", Validator.Range(12, 48, "Width must be be between 12 and 48 inches."));
+    Validation.Add("length", Validator.Integer("Length must be an integer"));
+    Validation.Add("length", Validator.Range(12, 60, "Length must be be between 12 and 60 inches."));
 
     var name = "";
     var width = "";
@@ -100,22 +104,21 @@
 }
 @RenderPage("~/shared/_head.cshtml")
 <form id="edit-entry" method="post">
-    @Html.ValidationSummary()
     
     <div class="form-group">
         <label>Name:</label>
-        <input class="form-control" name="Name" type="text" size="20" value="@name" />
-
+        <input class="form-control" name="name" type="text" size="20" value="@name" />
+        @Html.ValidationMessage("name")
     </div>
     <div class="form-group">
-        <label>Width:</label>
-        <input class="form-control" name="Width" type="text" size="20" value="@width" />
-
+        <label>Width (12 to 48 inches):</label>
+        <input class="form-control" name="width" type="text" size="20" value="@width" />
+        @Html.ValidationMessage("width")
     </div>
     <div class="form-group">
-        <label>Length:</label>
-        <input class="form-control" name="Length" type="text" size="20" value="@length" />
-
+        <label>Length (12 to 60 inches):</label>
+        <input class="form-control" name="length" type="text" size="20" value="@length" />
+        @Html.ValidationMessage("length")
     </div>
 
    <!-- need to figure out how to pre-set these values to the correct ones for the id -->
