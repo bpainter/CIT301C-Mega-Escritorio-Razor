@@ -9,7 +9,7 @@
 
     if (!Request.QueryString["filter"].IsEmpty())
     {
-        var filterQuery = "SELECT * FROM Orders2 WHERE Name=@0 OR Price=@0";
+        var filterQuery = "SELECT * FROM Orders2 WHERE Name=@0";
         var filterValue = Request.QueryString["filter"];
         orderData = db.Query(filterQuery, filterValue);
     }
@@ -24,21 +24,27 @@
     <header>
         <h1>Mega Escritorio</h1>
         <a class="btn btn-primary" href="~/modify/new/add-new-desk">
-        Add a New Desk</a>
+        Order a New Desk</a>
     </header>
 }
+
+<form method="get" class="search">
+    <label>
+        <input type="search" name="filter" value="@Request.QueryString["search"]" placeholder="Search..." />
+    </label>
+</form>
 
 @orderGrid.GetHtml(
     tableStyle: "table table-bordered table-striped",
     columns: orderGrid.Columns(
         orderGrid.Column("Name"),
-        orderGrid.Column("Width"),
-        orderGrid.Column("Length"),
-        orderGrid.Column("NumDrawers"),
-        orderGrid.Column("MaterialType"),
-        orderGrid.Column("RushDays"),
-        orderGrid.Column("Price"),
         orderGrid.Column("Date", format: @<text>@item.Date.ToString("MM/dd/yy")</text>),
+        orderGrid.Column("Width", canSort: false),
+        orderGrid.Column("Length", canSort: false),
+        orderGrid.Column("NumDrawers", canSort: false),
+        orderGrid.Column("MaterialType", canSort: false),
+        orderGrid.Column("RushDays", canSort: false),
+        orderGrid.Column("Price", canSort: false),
         orderGrid.Column(format: @<a class="btn btn-default btn-small" href="~/modify/edit/@item.Id"><i class="glyphicon glyphicon-pencil"></i>Edit</a>),
         orderGrid.Column(format: @<a class="btn btn-default btn-small" href="~/modify/delete/@item.Id"><i class="glyphicon glyphicon-remove"></i>Delete</a>)
     )
