@@ -3,31 +3,27 @@
 }
 
 @{
+    Validation.RequireField("name", "Name is required.");
+    Validation.RequireField("width", "Width is required.");
+    Validation.RequireField("length", "Length is required.");
+
     var name = "";
     var width = "";
     var length = "";
-    var materialType ="";
+    var materialType = "";
     var numOfDrawers = "";
     var rushOrderDays = "";
-    var surfacePrice = "";
-    var surfaceUpgrade = "";
-    var shippingPrice = "";
-    var surfaceArea = "";
-    var price = "";
     var id = UrlData[0];
 
     if (id.IsEmpty())
     {
-        Response.Redirect("~/index");
+        Response.Redirect("~/index/view-orders");
     }
 
     var db = Database.Open("Orders");
 
     if (IsPost && Validation.IsValid())
     {
-        Validation.RequireField("name", "Name is required.");
-        Validation.RequireField("width", "Width is required.");
-        Validation.RequireField("length", "Length is required.");
 
         name = Request.Form["name"];
         width = Request.Form["width"];
@@ -36,7 +32,48 @@
         numOfDrawers = Request.Form["getDrawers"];
         rushOrderDays = Request.Form["getDays"];
 
-        var queryString = "UPDATE Orders2 SET Name=@0, Width=@2, Length=@3, NumDrawers=@4, MaterialType=@5, RushDays=@6, Price=@7 WHERE Id=@8";
+        var drawerPrice = 0;
+        var surfacePrice = 0;
+        var surfaceUpgrade = 0;
+        var shippingPrice = 0;
+        var surfaceArea = 0;
+        var price = 0;
+        var basePrice = 200;
+
+        //use the length and width to determine the surfaceArea upgrade
+        try
+        {
+            surfaceArea = Int32.Parse(width) * Int32.Parse(length);
+            surfacePrice = surfaceArea > 1000 ? (surfaceArea - 1000) * 5 : 0;
+        }
+        catch (IOException e)
+        {
+            Console.WriteLine("IOException source: {0}", e.Source);
+        }
+        //get the upgrade for the material
+        surfaceUpgrade = db.QueryValue("SELECT Upgrade FROM Materials WHERE Material=(@0)", materialType);
+
+        //get the upgrade for the Rush Days Option
+        if (surfaceArea < 1000)
+        {
+            shippingPrice = db.QueryValue("SELECT smallDesk FROM shippingPrices WHERE Days=(@0)", rushOrderDays);
+        }
+        else if (surfaceArea >= 1000 && surfaceArea < 1999)
+        {
+            shippingPrice = db.QueryValue("SELECT medDesk FROM shippingPrices WHERE Days=(@0)", rushOrderDays);
+        }
+        else if (surfaceArea >= 2000)
+        {
+            shippingPrice = db.QueryValue("SELECT largeDesk FROM shippingPrices WHERE Days=(@0)", rushOrderDays);
+        }
+
+        // Calculate Drawer Price
+        drawerPrice = Int32.Parse(numOfDrawers) * 50;
+
+        // Calculate Total Price
+        price = basePrice + surfacePrice + drawerPrice + shippingPrice;
+
+        var queryString = "UPDATE Orders2 SET Name=@0, Width=@1, Length=@2, NumDrawers=@3, MaterialType=@4, RushDays=@5, Price=@6 WHERE Id=@7";
         db.Execute(queryString, name, width, length, numOfDrawers, materialType, rushOrderDays, price, id);
         Response.Redirect("~/index");
     } else
@@ -50,7 +87,7 @@
         materialType = row.MaterialType;
         numOfDrawers = row.NumDrawers;
         rushOrderDays = row.RushDays;
-        price = row.Price;
+
     }
 }
 
@@ -64,7 +101,7 @@
 @RenderPage("~/shared/_head.cshtml")
 <form id="edit-entry" method="post">
     @Html.ValidationSummary()
-    <h4>Base Desk Price: $200</h4>
+    
     <div class="form-group">
         <label>Name:</label>
         <input class="form-control" name="Name" type="text" size="20" value="@name" />
@@ -113,23 +150,23 @@
     <div class="form-group">
         <label>Number Of Drawers:</label>
         <select class="form-control" name="getDrawers">
-            <option value="zero" @(numOfDrawers == "zero" ? "selected" : "")>0</option>
-            <option value="one" @(numOfDrawers == "one" ? "selected" : "")>1 - $50</option>
-            <option value="two" @(numOfDrawers == "two" ? "selected" : "")>2 - $100</option>
-            <option value="three" @(numOfDrawers == "three" ? "selected" : "")>3 - $150</option>
-            <option value="four" @(numOfDrawers == "four" ? "selected" : "")>4 - $200</option>v
-            <option value="five" @(numOfDrawers == "five" ? "selected" : "")>5 - $250</option>
-            <option value="six" @(numOfDrawers == "six" ? "selected" : "")>6 - $300</option>
-            <option value="seven" @(numOfDrawers == "seven" ? "selected" : "")>7 - $350</option>
+            <option value="0" @(numOfDrawers == "zero" ? "selected" : "")>0</option>
+            <option value="1" @(numOfDrawers == "one" ? "selected" : "")>1 - $50</option>
+            <option value="2" @(numOfDrawers == "two" ? "selected" : "")>2 - $100</option>
+            <option value="3" @(numOfDrawers == "three" ? "selected" : "")>3 - $150</option>
+            <option value="4" @(numOfDrawers == "four" ? "selected" : "")>4 - $200</option>v
+            <option value="5" @(numOfDrawers == "five" ? "selected" : "")>5 - $250</option>
+            <option value="6" @(numOfDrawers == "six" ? "selected" : "")>6 - $300</option>
+            <option value="7" @(numOfDrawers == "seven" ? "selected" : "")>7 - $350</option>
         </select>
     </div>
     <div class="form-group">
         <label>Shipping Days:</label>
         <select class="form-control" name="getDays">
-            <option value="three" @(rushOrderDays == "three" ? "selected" : "")>3 days</option>
-            <option value="five" @(rushOrderDays == "five" ? "selected" : "")>5 days</option>
-            <option value="seven" @(rushOrderDays == "seven" ? "selected" : "")>7 days</option>
-            <option value="ground" @(rushOrderDays == "fourteen" ? "selected" : "")>14 days</option>
+            <option value="3" @(rushOrderDays == "three" ? "selected" : "")>3 days</option>
+            <option value="5" @(rushOrderDays == "five" ? "selected" : "")>5 days</option>
+            <option value="7" @(rushOrderDays == "seven" ? "selected" : "")>7 days</option>
+            <option value="14" @(rushOrderDays == "fourteen" ? "selected" : "")>14 days</option>
         </select>
     </div>
     <div class="button-group">
