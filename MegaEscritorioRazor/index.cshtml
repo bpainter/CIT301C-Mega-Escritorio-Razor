@@ -2,6 +2,24 @@
     Layout = "~/shared/_layout.cshtml";
 }
 
+@{
+    var db = Database.Open("Orders");
+    var orderData = db.Query("SELECT * FROM Orders2");
+
+
+    if (!Request.QueryString["filter"].IsEmpty())
+    {
+        var filterQuery = "SELECT * FROM Orders2 WHERE Name=@0 OR Price=@0";
+        var filterValue = Request.QueryString["filter"];
+        orderData = db.Query(filterQuery, filterValue);
+    }
+    else
+    {
+        orderData = db.Query("SELECT * FROM Orders2");
+    }
+
+    var orderGrid = new WebGrid(source: orderData, rowsPerPage: 5);
+}
 @section header {
     <header>
         <h1>Mega Escritorio</h1>
@@ -10,4 +28,18 @@
     </header>
 }
 
-<p>List desk orders here</p>
+@orderGrid.GetHtml(
+    tableStyle: "table table-bordered table-striped",
+    columns: orderGrid.Columns(
+        orderGrid.Column("Name"),
+        orderGrid.Column("Width"),
+        orderGrid.Column("Length"),
+        orderGrid.Column("NumDrawers"),
+        orderGrid.Column("MaterialType"),
+        orderGrid.Column("RushDays"),
+        orderGrid.Column("Price"),
+        orderGrid.Column("Date", format: @<text>@item.Date.ToString("MM/dd/yy")</text>),
+        orderGrid.Column(format: @<a class="btn btn-default btn-small" href="~/modify/edit/@item.Id"><i class="glyphicon glyphicon-pencil"></i>Edit</a>),
+        orderGrid.Column(format: @<a class="btn btn-default btn-small" href="~/modify/delete/@item.Id"><i class="glyphicon glyphicon-remove"></i>Delete</a>)
+    )
+)
