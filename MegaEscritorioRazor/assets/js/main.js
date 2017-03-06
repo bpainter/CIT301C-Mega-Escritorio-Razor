@@ -1,7 +1,7 @@
 $(document).ready(function () {
     if ($(".material").length) {
         // Get the value of the material dropdown when the page loads
-        materialDropdownValue = $(".material").val();
+        var materialDropdownValue = $(".material").val();
 
         // Set the correct square of the material image when the page loads 
         $('.img-container').find("." + materialDropdownValue).addClass("selected-border");
