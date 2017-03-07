@@ -45,7 +45,7 @@
         orderGrid.Column("MaterialType", canSort: false),
         orderGrid.Column("RushDays", canSort: false),
         orderGrid.Column("Price", canSort: false),
-        orderGrid.Column(format: @<a class="btn btn-default btn-small" href="~/modify/edit/@item.Id"><i class="glyphicon glyphicon-pencil"></i>Edit</a>),
-        orderGrid.Column(format: @<a class="btn btn-default btn-small" href="~/modify/delete/@item.Id"><i class="glyphicon glyphicon-remove"></i>Delete</a>)
+        orderGrid.Column(format: @<a class="btn btn-default btn-small" href="~/modify/edit/@item.Id/edit-order"><i class="glyphicon glyphicon-pencil"></i>Edit</a>),
+        orderGrid.Column(format: @<a class="btn btn-default btn-small" href="~/modify/delete/@item.Id/delete-order"><i class="glyphicon glyphicon-remove"></i>Delete</a>)
     )
 )
