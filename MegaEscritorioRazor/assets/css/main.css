@@ -73,3 +73,8 @@ p > span {
     opacity: 1;
 }
 
+.validation-summary-errors, .field-validation-error {
+  font-weight: bold;
+  color: red;
+  font-size: 11pt;
+}
