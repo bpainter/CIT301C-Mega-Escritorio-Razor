@@ -102,21 +102,21 @@
         <h1>Edit Order for @name</h1>
     </header>
 }
-@RenderPage("~/shared/_head.cshtml")
+
 <form id="edit-entry" method="post">
     
     <div class="form-group">
-        <label>Name:</label>
+        <label for="name">Name:</label>
         <input class="form-control" name="name" type="text" size="20" value="@name" />
         @Html.ValidationMessage("name")
     </div>
     <div class="form-group">
-        <label>Width (12 to 48 inches):</label>
+        <label for="width">Width (12 to 48 inches):</label>
         <input class="form-control" name="width" type="text" size="20" value="@width" />
         @Html.ValidationMessage("width")
     </div>
     <div class="form-group">
-        <label>Length (12 to 60 inches):</label>
+        <label for="length">Length (12 to 60 inches):</label>
         <input class="form-control" name="length" type="text" size="20" value="@length" />
         @Html.ValidationMessage("length")
     </div>
@@ -124,8 +124,8 @@
    <!-- need to figure out how to pre-set these values to the correct ones for the id -->
 
     <div class="form-group">
-        <label>Desk Material:</label>
-        <select class="form-control" name="getMaterial">
+        <label for="getMaterial">Desk Material:</label>
+        <select class="form-control material" name="getMaterial">
             <option value="pine" @(materialType == "pine" ? "selected" : "")>Pine - $50</option>
             <option value="poplar" @(materialType == "poplar" ? "selected" : "")>Poplar - $75</option>
             <option value="laminate" @(materialType == "laminate" ? "selected" : "")>Laminate - $100</option>
@@ -151,7 +151,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label>Number Of Drawers:</label>
+        <label for="getDrawers">Number Of Drawers:</label>
         <select class="form-control" name="getDrawers">
             <option value="0" @(numOfDrawers == "zero" ? "selected" : "")>0</option>
             <option value="1" @(numOfDrawers == "one" ? "selected" : "")>1 - $50</option>
@@ -164,7 +164,7 @@
         </select>
     </div>
     <div class="form-group">
-        <label>Shipping Days:</label>
+        <label for="getDays">Shipping Days:</label>
         <select class="form-control" name="getDays">
             <option value="3" @(rushOrderDays == "three" ? "selected" : "")>3 days</option>
             <option value="5" @(rushOrderDays == "five" ? "selected" : "")>5 days</option>
