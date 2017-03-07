@@ -9,16 +9,12 @@
     var materialType = "";
     var numOfDrawers = "";
     var rushOrderDays = "";
-    var surfacePrice = "";
-    var surfaceUpgrade = "";
-    var shippingPrice = "";
-    var surfaceArea = "";
     var price = "";
     var id = UrlData[0];
 
     if (id.IsEmpty())
     {
-        Response.Redirect("~/index");
+        Response.Redirect("~/index/view-order");
     }
 
     var db = Database.Open("Orders");
@@ -37,7 +33,7 @@
         var queryString = "DELETE FROM Orders2 WHERE Id=@0";
 
         db.Execute(queryString, id);
-        Response.Redirect(Href("~/index"));
+        Response.Redirect(Href("~/index/view-orders"));
     }
 }
 
@@ -101,7 +97,7 @@
     </div>
 
     <div class="button-group">
-        <a href="~/index" class="btn btn-default">Cancel</a>
+        <a href="~/index/view-order" class="btn btn-default">Cancel</a>
         <button type="submit" class="btn btn-danger">Delete</button>
         
     </div>
